@@ -1,0 +1,401 @@
+[
+  {
+    "id": "bare_metal_tenancy_isolation",
+    "rule_id": "ensure_bare_metal_tenancy_isolation",
+    "cis_section": "aill-1.1",
+    "severity": "high",
+    "probe_type": "manual",
+    "rationale": "Requires physical inspection or IaaS inventory API confirmation that no hypervisor layer is shared between tenants. Cannot be determined from cluster-level probes alone."
+  },
+
+  {
+    "id": "tenant_account_created_via_sovereign_core",
+    "rule_id": "ensure_tenant_account_lifecycle_managed",
+    "cis_section": "aill-1.2",
+    "severity": "high",
+    "probe_type": "catalog_list_all_false",
+    "field": "tenants_provisioned_outside_onboarding_flow",
+    "list_field": "out_of_band",
+    "id_field": "tenant_name",
+    "expected_description": "no tenant was provisioned outside the IBM Sovereign Core onboarding flow"
+  },
+
+  {
+    "id": "cluster_registered_with_compliance_centre",
+    "rule_id": "ensure_cluster_compliance_registration",
+    "cis_section": "aill-1.3",
+    "severity": "high",
+    "probe_type": "catalog_boolean",
+    "field": "compliance_registration_operator_installed",
+    "expected_value": true
+  },
+
+  {
+    "id": "compliance_registration_operator_healthy",
+    "rule_id": "ensure_cluster_compliance_registration",
+    "cis_section": "aill-1.3",
+    "severity": "high",
+    "probe_type": "catalog_boolean",
+    "field": "compliance_registration_operator_healthy",
+    "expected_value": true
+  },
+
+  {
+    "id": "workspace_network_policy_default_deny",
+    "rule_id": "ensure_workspace_level_network_isolation",
+    "cis_section": "aill-1.4",
+    "severity": "high",
+    "probe_type": "catalog_boolean",
+    "field": "default_deny_network_policy_present",
+    "expected_value": true
+  },
+
+  {
+    "id": "cross_namespace_traffic_blocked",
+    "rule_id": "ensure_workspace_level_network_isolation",
+    "cis_section": "aill-1.4",
+    "severity": "high",
+    "probe_type": "catalog_list_all_false",
+    "field": "namespaces_without_network_isolation",
+    "list_field": "unrestricted_egress",
+    "id_field": "namespace",
+    "expected_description": "no workspace namespace has unrestricted cross-namespace egress"
+  },
+
+  {
+    "id": "tenant_cpu_quota_defined",
+    "rule_id": "ensure_cluster_resource_quotas_enforced",
+    "cis_section": "aill-1.5",
+    "severity": "medium",
+    "probe_type": "catalog_list_all_false",
+    "field": "namespaces_missing_resource_quota",
+    "list_field": "quota_absent",
+    "id_field": "namespace",
+    "expected_description": "all tenant namespaces have a ResourceQuota defined"
+  },
+
+  {
+    "id": "tenant_gpu_quota_defined",
+    "rule_id": "ensure_cluster_resource_quotas_enforced",
+    "cis_section": "aill-1.5",
+    "severity": "medium",
+    "probe_type": "catalog_list_all_false",
+    "field": "namespaces_missing_gpu_limit",
+    "list_field": "gpu_limit_absent",
+    "id_field": "namespace",
+    "expected_description": "all tenant namespaces have a GPU resource limit defined"
+  },
+
+  {
+    "id": "cluster_tls_cert_expiry_days",
+    "rule_id": "ensure_cluster_certificate_expiry_monitored",
+    "cis_section": "aill-1.6",
+    "severity": "medium",
+    "probe_type": "scalar_min",
+    "setting": "cluster_tls_cert_expiry_days_remaining",
+    "expected_value": 30
+  },
+
+  {
+    "id": "data_product_classification_present",
+    "rule_id": "ensure_data_classification_before_sharing",
+    "cis_section": "aill-2.1",
+    "severity": "high",
+    "probe_type": "catalog_list_all_false",
+    "field": "data_products_missing_classification",
+    "list_field": "unclassified",
+    "id_field": "product_name",
+    "expected_description": "all data products in the marketplace have a classification label"
+  },
+
+  {
+    "id": "data_product_departmental_approval",
+    "rule_id": "ensure_departmental_approval_gate_for_data_products",
+    "cis_section": "aill-2.2",
+    "severity": "high",
+    "probe_type": "catalog_list_all_false",
+    "field": "data_products_without_approval",
+    "list_field": "approval_missing",
+    "id_field": "product_name",
+    "expected_description": "all published data products have documented departmental approval on record"
+  },
+
+  {
+    "id": "data_product_no_public_access",
+    "rule_id": "ensure_data_access_restricted_to_approved_roles",
+    "cis_section": "aill-2.3",
+    "severity": "high",
+    "probe_type": "catalog_list_all_false",
+    "field": "data_products_with_open_access",
+    "list_field": "public_access_enabled",
+    "id_field": "product_name",
+    "expected_description": "no data product allows unauthenticated or role-unrestricted access"
+  },
+
+  {
+    "id": "data_residency_within_sovereign_boundary",
+    "rule_id": "ensure_data_residency_within_state_data_centre",
+    "cis_section": "aill-2.4",
+    "severity": "high",
+    "probe_type": "manual",
+    "rationale": "Requires attestation from the platform operator that no replication or egress rule routes government data outside the AP State Data Centre perimeter."
+  },
+
+  {
+    "id": "data_access_audit_logging_enabled",
+    "rule_id": "ensure_data_access_audit_logging",
+    "cis_section": "aill-2.5",
+    "severity": "medium",
+    "probe_type": "catalog_boolean",
+    "field": "data_access_audit_logging_enabled",
+    "expected_value": true
+  },
+
+  {
+    "id": "nonprod_data_masking_applied",
+    "rule_id": "ensure_non_production_data_masking",
+    "cis_section": "aill-2.6",
+    "severity": "high",
+    "probe_type": "manual",
+    "rationale": "Requires attestation from the data owner that PII and sensitive fields have been masked or replaced with synthetic data in all non-production environments."
+  },
+
+  {
+    "id": "model_image_signing_enforced",
+    "rule_id": "ensure_container_image_signing_and_registry_control",
+    "cis_section": "aill-3.1",
+    "severity": "high",
+    "probe_type": "catalog_boolean",
+    "field": "image_signing_policy_enforced",
+    "expected_value": true
+  },
+
+  {
+    "id": "model_images_from_internal_registry_only",
+    "rule_id": "ensure_container_image_signing_and_registry_control",
+    "cis_section": "aill-3.1",
+    "severity": "high",
+    "probe_type": "catalog_list_all_false",
+    "field": "deployments_using_external_registry",
+    "list_field": "external_registry_used",
+    "id_field": "deployment_name",
+    "expected_description": "no model deployment pulls images from outside the IBM Sovereign Core internal OCI registry"
+  },
+
+  {
+    "id": "model_images_no_critical_cves",
+    "rule_id": "ensure_model_image_cve_scanning",
+    "cis_section": "aill-3.2",
+    "severity": "high",
+    "probe_type": "catalog_list_all_false",
+    "field": "model_images_with_critical_cves",
+    "list_field": "critical_cve_present",
+    "id_field": "image_name",
+    "expected_description": "no model container image has an unmitigated critical CVE"
+  },
+
+  {
+    "id": "model_version_provenance_present",
+    "rule_id": "ensure_model_version_provenance",
+    "cis_section": "aill-3.3",
+    "severity": "medium",
+    "probe_type": "catalog_list_all_false",
+    "field": "model_deployments_missing_provenance",
+    "list_field": "provenance_missing",
+    "id_field": "model_name",
+    "expected_description": "all deployed model versions carry verifiable provenance metadata"
+  },
+
+  {
+    "id": "model_dependencies_no_gpl_conflict",
+    "rule_id": "ensure_open_source_licence_compliance",
+    "cis_section": "aill-3.4",
+    "severity": "medium",
+    "probe_type": "catalog_list_all_false",
+    "field": "model_packages_with_licence_conflict",
+    "list_field": "licence_conflict_flagged",
+    "id_field": "package_name",
+    "expected_description": "no model dependency has a GPL/LGPL licence conflict flagged for legal review"
+  },
+
+  {
+    "id": "responsible_ai_attestation_on_file",
+    "rule_id": "ensure_responsible_ai_policy_attestation",
+    "cis_section": "aill-3.5",
+    "severity": "medium",
+    "probe_type": "manual",
+    "rationale": "Requires documented Responsible AI attestation (bias evaluation, fairness testing, intended-use boundary review) submitted by the model owner before publication."
+  },
+
+  {
+    "id": "model_endpoint_no_cross_tenant_access",
+    "rule_id": "ensure_model_access_restricted_to_authorised_tenants",
+    "cis_section": "aill-3.6",
+    "severity": "high",
+    "probe_type": "catalog_list_all_false",
+    "field": "model_endpoints_with_cross_tenant_access",
+    "list_field": "cross_tenant_access_enabled",
+    "id_field": "endpoint_name",
+    "expected_description": "no model endpoint is accessible to tenants that have not been explicitly granted access"
+  },
+
+  {
+    "id": "inference_service_within_sovereign_boundary",
+    "rule_id": "ensure_inference_service_deployed_within_sovereign_boundary",
+    "cis_section": "aill-4.1",
+    "severity": "high",
+    "probe_type": "catalog_boolean",
+    "field": "inference_service_sovereign_boundary_confirmed",
+    "expected_value": true
+  },
+
+  {
+    "id": "inference_api_authentication_enforced",
+    "rule_id": "ensure_inference_api_authentication_enforced",
+    "cis_section": "aill-4.2",
+    "severity": "high",
+    "probe_type": "catalog_boolean",
+    "field": "inference_api_auth_required",
+    "expected_value": true
+  },
+
+  {
+    "id": "inference_no_anonymous_requests_allowed",
+    "rule_id": "ensure_inference_api_authentication_enforced",
+    "cis_section": "aill-4.2",
+    "severity": "high",
+    "probe_type": "catalog_list_all_false",
+    "field": "inference_endpoints_allowing_anonymous_access",
+    "list_field": "anonymous_access_enabled",
+    "id_field": "endpoint_name",
+    "expected_description": "no inference endpoint accepts anonymous or unauthenticated requests"
+  },
+
+  {
+    "id": "inference_usage_metered_per_tenant",
+    "rule_id": "ensure_inference_usage_metered_per_tenant",
+    "cis_section": "aill-4.3",
+    "severity": "medium",
+    "probe_type": "catalog_boolean",
+    "field": "inference_metering_enabled",
+    "expected_value": true
+  },
+
+  {
+    "id": "inference_metering_reported_to_usage_central",
+    "rule_id": "ensure_inference_usage_metered_per_tenant",
+    "cis_section": "aill-4.3",
+    "severity": "medium",
+    "probe_type": "catalog_boolean",
+    "field": "inference_metering_usage_central_connected",
+    "expected_value": true
+  },
+
+  {
+    "id": "inference_request_metadata_logging_enabled",
+    "rule_id": "ensure_inference_request_and_response_logging",
+    "cis_section": "aill-4.4",
+    "severity": "medium",
+    "probe_type": "catalog_boolean",
+    "field": "inference_request_metadata_logging_enabled",
+    "expected_value": true
+  },
+
+  {
+    "id": "inference_tls_enforced",
+    "rule_id": "ensure_inference_service_tls_enforcement",
+    "cis_section": "aill-4.5",
+    "severity": "high",
+    "probe_type": "catalog_boolean",
+    "field": "inference_tls_enforced",
+    "expected_value": true
+  },
+
+  {
+    "id": "inference_no_plaintext_endpoints",
+    "rule_id": "ensure_inference_service_tls_enforcement",
+    "cis_section": "aill-4.5",
+    "severity": "high",
+    "probe_type": "catalog_list_all_false",
+    "field": "inference_endpoints_without_tls",
+    "list_field": "plaintext_exposed",
+    "id_field": "endpoint_name",
+    "expected_description": "no inference endpoint is exposed over plaintext HTTP"
+  },
+
+  {
+    "id": "inference_rate_limiting_configured",
+    "rule_id": "ensure_inference_rate_limiting_per_tenant",
+    "cis_section": "aill-4.6",
+    "severity": "medium",
+    "probe_type": "catalog_list_all_false",
+    "field": "tenants_without_inference_rate_limit",
+    "list_field": "rate_limit_absent",
+    "id_field": "tenant_name",
+    "expected_description": "all tenants have an inference request rate limit configured"
+  },
+
+  {
+    "id": "compliance_officers_group_present",
+    "rule_id": "ensure_compliance_officers_group_established",
+    "cis_section": "aill-5.1",
+    "severity": "high",
+    "probe_type": "catalog_boolean",
+    "field": "compliance_officers_group_present",
+    "expected_value": true
+  },
+
+  {
+    "id": "compliance_officers_group_has_members",
+    "rule_id": "ensure_compliance_officers_group_established",
+    "cis_section": "aill-5.1",
+    "severity": "high",
+    "probe_type": "catalog_count_max",
+    "field": "compliance_officers_group_member_count",
+    "expected_value": 0,
+    "_note": "Inverted: pass = count > 0. Evaluator should be extended with catalog_count_min for this check."
+  },
+
+  {
+    "id": "compliance_role_no_infra_change_authority",
+    "rule_id": "ensure_compliance_role_separation_from_infra_ops",
+    "cis_section": "aill-5.2",
+    "severity": "high",
+    "probe_type": "catalog_list_all_false",
+    "field": "compliance_officers_with_infra_write_rbac",
+    "list_field": "has_infra_write",
+    "id_field": "user_name",
+    "expected_description": "no member of ComplianceOfficers has infrastructure change authority (cluster-admin, edit, or equivalent)"
+  },
+
+  {
+    "id": "continuous_cve_monitoring_enabled",
+    "rule_id": "ensure_continuous_cve_posture_monitoring",
+    "cis_section": "aill-5.3",
+    "severity": "medium",
+    "probe_type": "catalog_boolean",
+    "field": "compliance_centre_cve_scanning_enabled",
+    "expected_value": true
+  },
+
+  {
+    "id": "external_partner_time_bounded_credentials",
+    "rule_id": "ensure_external_partner_access_control",
+    "cis_section": "aill-5.4",
+    "severity": "high",
+    "probe_type": "catalog_list_all_false",
+    "field": "external_partner_accounts_with_standing_access",
+    "list_field": "standing_access",
+    "id_field": "partner_account",
+    "expected_description": "no external partner account has standing (non-expiring) credentials to government data or AI services"
+  },
+
+  {
+    "id": "sovereign_boundary_enforcement_attestation",
+    "rule_id": "ensure_sovereign_boundary_enforcement_attested",
+    "cis_section": "aill-5.5",
+    "severity": "high",
+    "probe_type": "manual",
+    "rationale": "Requires a periodic signed attestation from the platform operator confirming no AI Living Labs workload has been migrated to or is dependent on infrastructure outside the AP State Data Centre."
+  }
+]
